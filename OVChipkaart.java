@@ -7,7 +7,7 @@ public class OVChipkaart {
     private Date geldigTot;
     private int klasse;
     private double saldo;
-    private Reiziger reizigerID;
+    private Reiziger eigenaar;
 
     public OVChipkaart(int kn, Date gt, int kl) {
         kaartNummer = kn;
@@ -26,6 +26,9 @@ public class OVChipkaart {
 
     public double getSaldo() {return saldo;}
     public void setSaldo(double s) {saldo = s;}
+
+    public Reiziger getEigenaar() { return eigenaar;}
+    public void setEigenaar(Reiziger reiziger) { eigenaar = reiziger;}
 
     public String toString() {
         String a = "OV-Chipkaart: [ Kaartnummer : " + this.kaartNummer + ", Geldig tot: " + this.geldigTot + ", Saldo: " + this.saldo + ", klasse: " + this.klasse + " ]";

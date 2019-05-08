@@ -1,8 +1,7 @@
 package DP_P2;
 
-import java.sql.Connection;
+import java.sql.*;
 import java.sql.Date;
-import java.sql.SQLException;
 
 public class Main {
     private static final String DB_DRIV = "oracle.jdbc.driver.OracleDriver";
@@ -12,7 +11,15 @@ public class Main {
     private static Connection conn;
 
     public static void main(String[] args) throws SQLException {
-        // Implementatie van de DAO klasse
-        ReizigerDao reizigerDao = new ReizigerOracleDaoImpl();
+
+        try {
+            Class.forName(DB_DRIV).newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
+            e1.printStackTrace();
+        }
+
+        conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+
     }
 }
