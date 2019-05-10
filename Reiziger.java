@@ -2,13 +2,14 @@ package DP_P2;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Reiziger {
     private String achternaam;
     private String tussenvoegsel;
     private String voorletters;
     private Date gbdatum;
-    private int reizigerid;
+    private int reizigerId;
     private ArrayList<OVChipkaart> ovChipkaarten;
 
     public Reiziger(int id, String an, String tv, String vl, Date gbdatum) {
@@ -16,14 +17,14 @@ public class Reiziger {
         this.voorletters = vl;
         this.tussenvoegsel = tv;
         this.gbdatum = gbdatum;
-        this.reizigerid = id;
+        this.reizigerId = id;
         ovChipkaarten = new ArrayList<OVChipkaart>();
     }
 
     public Reiziger() {}
 
-    public int getId() { return reizigerid;}
-    public void setId(int a) { this.reizigerid = a;}
+    public int getId() { return reizigerId;}
+    public void setId(int id) { this.reizigerId = id;}
 
     public String getActhernaam() { return achternaam;}
     public void setAchternaam(String n) { achternaam = n;}
@@ -35,10 +36,13 @@ public class Reiziger {
     public void setTussenvoegsel(String t) { this.tussenvoegsel = t;}
 
     public Date getGBdatum() { return gbdatum;}
-    public void setGBdatum(Date d) {this.gbdatum = d;}
+    public void setGBdatum(Date date) {this.gbdatum = date;}
+
+    public ArrayList<OVChipkaart> getOvChipkaarten() { return ovChipkaarten;}
+
 
     @Override
     public String toString() {
-        return this.reizigerid + ", " + this.voorletters + ". " + this.tussenvoegsel + " " + this.achternaam + ", " +  this.gbdatum.toString();
+        return this.reizigerId + ", " + this.voorletters + ". " + this.tussenvoegsel + " " + this.achternaam + ", " +  this.gbdatum.toString();
     }
 }

@@ -3,17 +3,23 @@ package DP_P2;
 import java.sql.Date;
 
 public class OVChipkaart {
+    private int reizigerId;
     private int kaartNummer;
     private Date geldigTot;
     private int klasse;
     private double saldo;
     private Reiziger eigenaar;
 
-    public OVChipkaart(int kn, Date gt, int kl) {
+    public OVChipkaart(int kn, Date gt, int kl, double sal, int id ) {
         kaartNummer = kn;
         geldigTot = gt;
         klasse = kl;
+        saldo = sal;
+        reizigerId = id;
     }
+
+    public int getReizigerId() {return reizigerId;}
+    public void setReizigerId(int id) { reizigerId = id;}
 
     public int getKaartNummer() {return kaartNummer;}
     public void setKaartNummer(int num) {kaartNummer = num;}
