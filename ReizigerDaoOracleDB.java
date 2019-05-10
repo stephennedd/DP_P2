@@ -34,17 +34,20 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
         return reizigers;
     }
 
-    public List<Reiziger> findByGBdatum(Date GBdatum) throws SQLException {
+    public List<Reiziger> findByGBdatum(Date date) throws SQLException {
         Connection connection = getConnection();
         ArrayList<Reiziger> reizigers = new ArrayList<>();
         String query = "SELECT * FROM REIZIGER WHERE GEBORTEDATUM = ?";
         PreparedStatement statement = connection.prepareStatement(query);
-        statement.setDate(1, GBdatum);
+        statement.setDate(1, date);
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
             reizigers.add(toReiziger(resultSet));
         }
-        closeConnection(connection, statement, resultSet);
+        statement.close();
+        resultSet.close();
+        connection.close();
+
         return reizigers;
     }
 
@@ -57,7 +60,6 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
         statement.setString(3, reiziger.getTussenvoegsel());
         statement.setString(4, reiziger.getActhernaam());
         statement.setDate(5, reiziger.getGBdatum());
-        connection.close();
         return statement.executeUpdate() == 1 ? reiziger : null;
 
     }
