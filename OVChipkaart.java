@@ -37,7 +37,7 @@ public class OVChipkaart {
     public void setEigenaar(Reiziger reiziger) { eigenaar = reiziger;}
 
     public String toString() {
-        String a = "OV-Chipkaart: [ Kaartnummer : " + this.kaartNummer + ", Geldig tot: " + this.geldigTot + ", Saldo: " + this.saldo + ", klasse: " + this.klasse + " ]";
+        String a = "OV-Chipkaart: [ Kaartnummer : " + this.kaartNummer + ", Geldig tot: " + this.geldigTot + ", Saldo: " + this.saldo + ", klasse: " + this.klasse + ", Eigenaar reizigerID: " + this.reizigerId + " ]";
         return a;
     }
 }

@@ -30,7 +30,7 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
         while (resultSet.next()) {
             reizigers.add(toReiziger(resultSet));
         }
-        closeConnection(connection, statement, resultSet);
+        statement.close();
         return reizigers;
     }
 
@@ -45,9 +45,6 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
             reizigers.add(toReiziger(resultSet));
         }
         statement.close();
-        resultSet.close();
-        connection.close();
-
         return reizigers;
     }
 
@@ -64,14 +61,14 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
 
     }
 
-    public Reiziger update(Reiziger reiziger, int reizigerId) throws SQLException {
+    public Reiziger update(Reiziger reiziger) throws SQLException {
         Connection connection = getConnection();
         String query = "UPDATE REIZIGER SET TUSSENVOEGSEL = ?, ACHTERNAAM = ?, GEBORTEDATUM = ? WHERE REIZIGERID = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, reiziger.getTussenvoegsel());
         statement.setString(2, reiziger.getActhernaam());
         statement.setDate(3,reiziger.getGBdatum());
-        statement.setInt(4, reizigerId);
+        statement.setInt(4, reiziger.getId());
         return statement.executeUpdate() == 1 ? reiziger : null;
     }
 

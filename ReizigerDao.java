@@ -8,6 +8,6 @@ public interface ReizigerDao {
     public List<Reiziger> findAll() throws SQLException;
     public List<Reiziger> findByGBdatum(Date GBdatum) throws SQLException;
     public Reiziger save(Reiziger reiziger) throws SQLException;
-    public Reiziger update(Reiziger reiziger, int id) throws SQLException;
+    public Reiziger update(Reiziger reiziger) throws SQLException;
     public boolean delete(Reiziger reiziger) throws SQLException;
 }

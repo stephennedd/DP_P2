@@ -5,33 +5,91 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        System.out.println("FIND ALL FUNCTIE");
         ReizigerDaoOracleDB reizigerDaoOracleDB = new ReizigerDaoOracleDB();
+        OVChipkaartDaoOracleDB ovChipkaartDaoOracleDB = new OVChipkaartDaoOracleDB();
+        OVChipkaart ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2019-12-12"), 1, 10.00, 2);
+        Reiziger r1 = new Reiziger(10, "Nedd", "", "S", java.sql.Date.valueOf("1995-01-01"));
+
+        System.out.println("FIND ALL FUNCTIE");
         List<Reiziger> reizigers = reizigerDaoOracleDB.findAll();
         for (Reiziger reiziger : reizigers) {
             System.out.println(reiziger);
         }
+
         System.out.println();
+
         System.out.println("FIND BY GBDATUM");
         List<Reiziger> reizigers1 = reizigerDaoOracleDB.findByGBdatum(java.sql.Date.valueOf("2002-12-03"));
         for (Reiziger reiziger : reizigers1) {
             System.out.println(reiziger);
         }
-//        System.out.println();
-//        System.out.println("SAVE FUNCTIE");
-//        Reiziger r1 = new Reiziger(10, "Nedd", "", "S", java.sql.Date.valueOf("1995-01-01"));
-//        reizigerDaoOracleDB.save(r1);
-//        List<Reiziger> reizigers2 = reizigerDaoOracleDB.findAll();
-//        for (Reiziger reiziger : reizigers2) {
-//            System.out.println(reiziger);
-//        }
+
         System.out.println();
-        System.out.println("UPDATE FUNCTIE **Stephen vervangen met Jon**");
-        Reiziger r2 = new Reiziger(11, "Jones", "", "Jon", java.sql.Date.valueOf("1987-07-19"));
-        reizigerDaoOracleDB.update(r2, 10);
+
+        System.out.println("DELETE FUNCTIE");
+        reizigerDaoOracleDB.delete(r1);
+        for (Reiziger reiziger : reizigers) {
+            System.out.println(reiziger);
+        }
+        System.out.println();
+
+
+        System.out.println("SAVE FUNCTIE:");
+        reizigerDaoOracleDB.save(r1);
+
+        List<Reiziger> reizigers2 = reizigerDaoOracleDB.findAll();
+        for (Reiziger reiziger : reizigers2) {
+            System.out.println(reiziger);
+        }
+
+        System.out.println();
+
+        System.out.println("UPDATE FUNCTIE **Stephen tussenvoegsel 'de' geven**:");
+        r1.setTussenvoegsel("de");
+        reizigerDaoOracleDB.update(r1);
         List<Reiziger> reizigers3 = reizigerDaoOracleDB.findAll();
         for (Reiziger reiziger : reizigers3) {
             System.out.println(reiziger);
         }
+        System.out.println();
+
+        System.out.println("OVChipkaart findAll functie:");
+        List<OVChipkaart> ovChipkaarten = ovChipkaartDaoOracleDB.findAll();
+        for  (OVChipkaart ovChipkaart : ovChipkaarten) {
+            System.out.println(ovChipkaart);
+        }
+        System.out.println();
+
+        System.out.println("OVChipkaart findByReiziger functie ** OVChipkaarten van ReizigerID 2:");
+        List<OVChipkaart> ovChipkaarten1 = ovChipkaartDaoOracleDB.findByReiziger(2);
+        for (OVChipkaart ovChipkaart : ovChipkaarten1) {
+            System.out.println(ovChipkaart);
+        }
+        System.out.println();
+
+        System.out.println("OVChipkaart delete functie ** ov1 verwijderen:");
+        ovChipkaartDaoOracleDB.delete(ov1);
+        List<OVChipkaart> ovChipkaarten2 = ovChipkaartDaoOracleDB.findAll();
+        for (OVChipkaart ovChipkaart : ovChipkaarten2) {
+            System.out.println(ovChipkaart);
+        }
+        System.out.println();
+
+        System.out.println("OVChipkaart save functie ** ov1 toevoegen aan ReizigerID 2:");
+        ovChipkaartDaoOracleDB.save(ov1);
+        List<OVChipkaart> ovChipkaarten3 = ovChipkaartDaoOracleDB.findByReiziger(2);
+        for  (OVChipkaart ovChipkaart : ovChipkaarten3) {
+            System.out.println(ovChipkaart);
+        }
+        System.out.println();
+
+        System.out.println("OVChipkaart update functie ** ov1 set klasse naar 2");
+        ov1.setKlasse(2);
+        ovChipkaartDaoOracleDB.update(ov1);
+        List<OVChipkaart> ovChipkaarten4 = ovChipkaartDaoOracleDB.findAll();
+        for (OVChipkaart ovChipkaart : ovChipkaarten4) {
+            System.out.println(ovChipkaart);
+        }
+
     }
 }

@@ -41,7 +41,6 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
         stmt.setInt(3, ovChipkaart.getKlasse());
         stmt.setDouble(4, ovChipkaart.getSaldo());
         stmt.setInt(5, ovChipkaart.getReizigerId());
-        connection.close();
         return stmt.executeUpdate() == 1 ? ovChipkaart : null;
     }
 
@@ -61,13 +60,12 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
 
     public OVChipkaart update(OVChipkaart ovChipkaart) throws SQLException {
        Connection connection = getConnection();
-       String query = "UPDATE OV_CHIPKAART SET GELDIGTOT = ?, KLASSE = ?, SALDO = ?, REIZIGERID = ?)";
+       String query = "UPDATE OV_CHIPKAART SET GELDIGTOT = ?, KLASSE = ?, SALDO = ?, REIZIGERID = ?";
        PreparedStatement statement = connection.prepareStatement(query);
        statement.setDate(1,ovChipkaart.getGeldigTot());
        statement.setInt(2, ovChipkaart.getKlasse());
        statement.setDouble(3, ovChipkaart.getSaldo());
        statement.setInt(4, ovChipkaart.getReizigerId());
-       connection.close();
        return statement.executeUpdate() == 1 ? ovChipkaart : null;
     }
 
@@ -76,7 +74,6 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
         String query = "DELETE FROM OV_CHIPKAART WHERE KAARTNUMMER = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, ovChipkaart.getKaartNummer());
-        connection.close();
         return statement.executeUpdate() == 1;
     }
 }
