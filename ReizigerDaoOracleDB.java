@@ -58,6 +58,7 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
         return null;
     }
 
+    @Override
     public List<Reiziger> findByGBdatum(Date date) {
 
         Connection connection = getConnection();
@@ -76,7 +77,7 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
                 r.setGBdatum(resultSet.getDate("GEBORTEDATUM"));
                 r.setVoorletters(resultSet.getString("VOORLETTERS"));
 
-                List<OVChipkaart> ovkaarten1 = OVDao.findByReiziger(r);
+                List<OVChipkaart> ovkaarten1 = new OVChipkaartDaoOracleDB().findByReiziger(r);
                 for (OVChipkaart kaart : ovkaarten1) {
                     r.addOvChipkaart(kaart);
                 }
@@ -89,6 +90,7 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
         return null;
     }
 
+    @Override
     public Reiziger save(Reiziger reiziger) {
 
         Connection connection = super.getConnection();
@@ -114,6 +116,7 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
 
     }
 
+    @Override
     public Reiziger update(Reiziger reiziger) throws SQLException {
         Connection connection = getConnection();
         String query = "UPDATE REIZIGER SET TUSSENVOEGSEL = ?, ACHTERNAAM = ?, GEBORTEDATUM = ? WHERE REIZIGERID = ?";
@@ -125,6 +128,7 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
         return statement.executeUpdate() == 1 ? reiziger : null;
     }
 
+    @Override
     public boolean delete(Reiziger reiziger) throws SQLException {
         Connection connection = getConnection();
         String query = "DELETE FROM REIZIGER WHERE REIZIGERID = ?";

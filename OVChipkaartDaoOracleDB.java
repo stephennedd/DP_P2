@@ -1,21 +1,12 @@
 package DP_P2;
 
+import javax.print.DocFlavor;
 import java.sql.*;
 import java.util.*;
 
 public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaartDao {
 
-    private OVChipkaart toOVChipkaart( ResultSet resultSet) throws SQLException {
-        OVChipkaart ovChipkaart = new OVChipkaart(
-                resultSet.getInt("KAARTNUMMER"),
-                resultSet.getDate("GELDIGTOT"),
-                resultSet.getInt("KLASSE"),
-                resultSet.getDouble("SALDO"),
-                resultSet.getInt("REIZIGERID")
-        );
-        return ovChipkaart;
-    }
-
+    @Override
     public List<OVChipkaart> findAll() {
         Connection connection = super.getConnection();
         ArrayList<OVChipkaart> ovChipkaarten = new ArrayList<>();
@@ -54,18 +45,25 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
         return null;
     }
 
+    @Override
     public List<OVChipkaart> findByReiziger(Reiziger reiziger) {
-        Connection connection = getConnection();
         ArrayList<OVChipkaart> ovChipkaarten = new ArrayList<>();
 
         try {
 
             String query = "SELECT * FROM OV_CHIPKAART WHERE REIZIGERID = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
+            PreparedStatement statement = this.getConnection().prepareStatement(query);
             statement.setInt(1, reiziger.getId());
             ResultSet resultSet = statement.executeQuery();
+
             while (resultSet.next()) {
-                ovChipkaarten.add(toOVChipkaart(resultSet));
+                OVChipkaart chipkaart = new OVChipkaart();
+                chipkaart.setEigenaar(reiziger);
+                chipkaart.setKaartNummer(resultSet.getInt("KAARTNUMMER"));
+                chipkaart.setGeldigTot(resultSet.getDate("GELDIGTOT"));
+                chipkaart.setSaldo(resultSet.getDouble("SALDO"));
+                chipkaart.setKlasse(resultSet.getInt("KLASSE"));
+                ovChipkaarten.add(chipkaart);
             }
             return ovChipkaarten;
         }
@@ -75,6 +73,7 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
         return null;
     }
 
+    @Override
     public OVChipkaart save(OVChipkaart ovChipkaart) throws SQLException {
         Connection connection = getConnection();
 
@@ -97,27 +96,7 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
         return ovChipkaart;
     }
 
-
-    public List<OVChipkaart> findByReizigerID(int reizigerID) {
-
-        try {
-            Connection connection = getConnection();
-            ArrayList<OVChipkaart> ovChipkaarts = new ArrayList<>();
-            String query = "SELECT * FROM OV_CHIPKAART WHERE REIZIGERID = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1,reizigerID);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                ovChipkaarts.add(toOVChipkaart(resultSet));
-            }
-            return ovChipkaarts;
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
+    @Override
     public OVChipkaart update(OVChipkaart ovChipkaart) throws SQLException {
        Connection connection = getConnection();
 
@@ -135,6 +114,7 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
        return ovChipkaart;
     }
 
+    @Override
     public boolean delete(OVChipkaart ovChipkaart) throws SQLException {
         Connection connection = getConnection();
         String query = "DELETE FROM OV_CHIPKAART WHERE KAARTNUMMER = ?";
