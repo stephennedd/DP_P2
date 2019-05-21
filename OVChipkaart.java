@@ -10,6 +10,8 @@ public class OVChipkaart {
     private double saldo;
     private Reiziger eigenaar;
 
+    public OVChipkaart() {}
+
     public OVChipkaart(int kn, Date gt, int kl, double sal, int id ) {
         kaartNummer = kn;
         geldigTot = gt;
@@ -36,8 +38,8 @@ public class OVChipkaart {
     public Reiziger getEigenaar() { return eigenaar;}
     public void setEigenaar(Reiziger reiziger) { eigenaar = reiziger;}
 
+    @Override
     public String toString() {
-        String a = "OV-Chipkaart: [ Kaartnummer : " + this.kaartNummer + ", Geldig tot: " + this.geldigTot + ", Saldo: " + this.saldo + ", klasse: " + this.klasse + ", Eigenaar reizigerID: " + this.reizigerId + " ]";
-        return a;
+        return "   OV-Chipkaart: [ Kaartnummer : " + this.kaartNummer + ", Geldig tot: " + this.geldigTot + ", Saldo: " + this.saldo + ", klasse: " + this.klasse + ", Eigenaar reizigerID: " + this.reizigerId + " ]";
     }
 }

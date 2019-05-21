@@ -2,7 +2,6 @@ package DP_P2;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Reiziger {
     private String achternaam;
@@ -39,6 +38,9 @@ public class Reiziger {
     public void setGBdatum(Date date) {this.gbdatum = date;}
 
     public ArrayList<OVChipkaart> getOvChipkaarten() { return ovChipkaarten;}
+    public ArrayList<OVChipkaart> addOvChipkaart(OVChipkaart ovChipkaart) { ovChipkaarten.add(ovChipkaart);
+        return ovChipkaarten;
+    }
 
 
     @Override

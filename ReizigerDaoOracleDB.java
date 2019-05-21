@@ -1,11 +1,7 @@
 package DP_P2;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
 
 public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
@@ -21,43 +17,100 @@ public class ReizigerDaoOracleDB extends OracleBaseDAO implements ReizigerDao {
         return reiziger;
     }
 
-    public List<Reiziger> findAll() throws SQLException {
+    @Override
+    public List<Reiziger> findAll() {
+
+        Connection connection = super.getConnection();
         ArrayList<Reiziger> reizigers = new ArrayList<>();
-        Connection connection = getConnection();
-        String query = "SELECT * FROM REIZIGER";
-        PreparedStatement statement = connection.prepareStatement(query);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            reizigers.add(toReiziger(resultSet));
+
+        try {
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * " + " FROM REIZIGER");
+
+            while (resultSet.next()) {
+                // maak nieuwe reiziger
+                Reiziger r = new Reiziger();
+
+                // Set reiziger id
+                r.setId(resultSet.getInt("REIZIGERID"));
+
+                // set reiziger naam
+                r.setAchternaam(resultSet.getString("ACHTERNAAM"));
+                r.setVoorletters(resultSet.getString("VOORLETTERS"));
+
+                // set reiziger geboortedatum
+                r.setGBdatum(resultSet.getDate("GEBORTEDATUM"));
+
+                // haal "alle" ovchipkaarten van reiziger op
+                for (OVChipkaart kaart : new OVChipkaartDaoOracleDB().findByReiziger(r)) {
+                    r.addOvChipkaart(kaart);
+                }
+
+                // voeg reiziger toe aan lijst van reizigers
+                reizigers.add(r);
+            }
+
+            return reizigers;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        statement.close();
-        return reizigers;
+        return null;
     }
 
-    public List<Reiziger> findByGBdatum(Date date) throws SQLException {
+    public List<Reiziger> findByGBdatum(Date date) {
+
         Connection connection = getConnection();
         ArrayList<Reiziger> reizigers = new ArrayList<>();
-        String query = "SELECT * FROM REIZIGER WHERE GEBORTEDATUM = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setDate(1, date);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            reizigers.add(toReiziger(resultSet));
+
+        try {
+            String query = "SELECT * FROM REIZIGER WHERE GEBORTEDATUM = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setDate(1, date);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Reiziger r = new Reiziger();
+                r.setId(resultSet.getInt("REIZIGERID"));
+                r.setAchternaam(resultSet.getString("ACHTERNAAM"));
+                r.setGBdatum(resultSet.getDate("GEBORTEDATUM"));
+                r.setVoorletters(resultSet.getString("VOORLETTERS"));
+
+                List<OVChipkaart> ovkaarten1 = OVDao.findByReiziger(r);
+                for (OVChipkaart kaart : ovkaarten1) {
+                    r.addOvChipkaart(kaart);
+                }
+                reizigers.add(r);
+            }
+            return reizigers;
         }
-        statement.close();
-        return reizigers;
+        catch (SQLException e) { e.printStackTrace();
+        }
+        return null;
     }
 
-    public Reiziger save(Reiziger reiziger) throws SQLException {
-        Connection connection = getConnection();
-        String query = "INSERT INTO REIZIGER (REIZIGERID, VOORLETTERS, TUSSENVOEGSEL, ACHTERNAAM, GEBORTEDATUM) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setInt(1, reiziger.getId());
-        statement.setString(2, reiziger.getVoorletters());
-        statement.setString(3, reiziger.getTussenvoegsel());
-        statement.setString(4, reiziger.getActhernaam());
-        statement.setDate(5, reiziger.getGBdatum());
-        return statement.executeUpdate() == 1 ? reiziger : null;
+    public Reiziger save(Reiziger reiziger) {
+
+        Connection connection = super.getConnection();
+
+        int id = reiziger.getId();
+        String vrltr = reiziger.getVoorletters();
+        String nm = reiziger.getActhernaam();
+        String tv = reiziger.getTussenvoegsel();
+        Date gb = reiziger.getGBdatum();
+
+        String query = "INSERT INTO reiziger (REIZIGERID, VOORLETTERS, ACHTERNAAM, GEBORTEDATUM)";
+        String add = query + "(" + id + ", " + vrltr + ", " + nm + ", " + gb + ")";
+
+        try {
+            PreparedStatement  statement = connection.prepareStatement(add);
+            statement.executeUpdate();
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reiziger;
 
     }
 

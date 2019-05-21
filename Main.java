@@ -5,12 +5,20 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
+
+        // initialize ReizigerDao and OVChipkaartDAO
+
         ReizigerDaoOracleDB reizigerDaoOracleDB = new ReizigerDaoOracleDB();
         OVChipkaartDaoOracleDB ovChipkaartDaoOracleDB = new OVChipkaartDaoOracleDB();
+
+        // Create OVChipkaart and Reiziger objects
+
         OVChipkaart ov1 = new OVChipkaart(12345, java.sql.Date.valueOf("2019-12-12"), 1, 10.00, 2);
         Reiziger r1 = new Reiziger(10, "Nedd", "", "S", java.sql.Date.valueOf("1995-01-01"));
 
+        // Test 1 Toon alle reizigers
         System.out.println("FIND ALL FUNCTIE");
+
         List<Reiziger> reizigers = reizigerDaoOracleDB.findAll();
         for (Reiziger reiziger : reizigers) {
             System.out.println(reiziger);
@@ -18,6 +26,7 @@ public class Main {
 
         System.out.println();
 
+        // Test 2 Toon reiziger gezocht op geboortedatum
         System.out.println("FIND BY GBDATUM");
         List<Reiziger> reizigers1 = reizigerDaoOracleDB.findByGBdatum(java.sql.Date.valueOf("2002-12-03"));
         for (Reiziger reiziger : reizigers1) {
@@ -26,6 +35,7 @@ public class Main {
 
         System.out.println();
 
+        // Test 3 Verwijder reiziger van DB
         System.out.println("DELETE FUNCTIE");
         reizigerDaoOracleDB.delete(r1);
         for (Reiziger reiziger : reizigers) {
@@ -60,8 +70,8 @@ public class Main {
         }
         System.out.println();
 
-        System.out.println("OVChipkaart findByReiziger functie ** OVChipkaarten van ReizigerID 2:");
-        List<OVChipkaart> ovChipkaarten1 = ovChipkaartDaoOracleDB.findByReiziger(2);
+        System.out.println("OVChipkaart findByReizigerID functie ** OVChipkaarten van ReizigerID 2:");
+        List<OVChipkaart> ovChipkaarten1 = ovChipkaartDaoOracleDB.findByReiziger(r1);
         for (OVChipkaart ovChipkaart : ovChipkaarten1) {
             System.out.println(ovChipkaart);
         }
@@ -77,7 +87,7 @@ public class Main {
 
         System.out.println("OVChipkaart save functie ** ov1 toevoegen aan ReizigerID 2:");
         ovChipkaartDaoOracleDB.save(ov1);
-        List<OVChipkaart> ovChipkaarten3 = ovChipkaartDaoOracleDB.findByReiziger(2);
+        List<OVChipkaart> ovChipkaarten3 = ovChipkaartDaoOracleDB.findByReiziger(r1);
         for  (OVChipkaart ovChipkaart : ovChipkaarten3) {
             System.out.println(ovChipkaart);
         }
