@@ -16,9 +16,21 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
         return ovChipkaart;
     }
 
+    private Reiziger toReiziger(ResultSet resultSet) throws SQLException {
+        Reiziger reiziger = new Reiziger(
+                resultSet.getInt("REIZIGERID"),
+                resultSet.getString("VOORLETTERS"),
+                resultSet.getString("TUSSENVOEGSEL"),
+                resultSet.getString("ACHTERNAAM"),
+                resultSet.getDate("GEBORTEDATUM")
+        );
+        return reiziger;
+    }
+
     @Override
     public List<OVChipkaart> findAll() {
         ArrayList<OVChipkaart> ovChipkaarten = new ArrayList<>();
+        ArrayList<Reiziger> reizigers = new ArrayList<>();
 
         try {
             String query = "SELECT * FROM OV_CHIPKAART";
@@ -28,22 +40,13 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
             while (rs.next()) {
                 ovChipkaarten.add(toOVChipkaart(rs));
 
-                query = "SELECT * FROM REIZIGER WHERE REIZIGERID = ?";
-                PreparedStatement stmt = this.getConnection().prepareStatement(query);
-                stmt.setInt(1, rs.getInt("REIZIGERID"));
-                ResultSet resultSet = stmt.executeQuery();
-                while (resultSet.next()){
-                    Reiziger r = new Reiziger();
-                    r.setId(resultSet.getInt("REIZIGERID"));
-                    r.setVoorletters(resultSet.getString("VOORLETTERS"));
-                    r.setTussenvoegsel(resultSet.getString("TUSSENVOEGSEL"));
-                    r.setAchternaam(resultSet.getString("ACHTERNAAM"));
-                    r.setGBdatum(resultSet.getDate("GEBORTEDATUM"));
-                    for(OVChipkaart kaart : new OVChipkaartDaoOracleDB().findByReiziger(r)){
-                        r.addOvChipkaart(kaart);
+                    for(Reiziger r : new ReizigerDaoOracleDB().findAll()) {
+                        reizigers.add(r);
+                        for(OVChipkaart kaart : new OVChipkaartDaoOracleDB().findByReiziger(r)){
+                            r.addOvChipkaart(kaart);
+                        }
                     }
                 }
-            }
             return ovChipkaarten;
         }
         catch (SQLException e) {
