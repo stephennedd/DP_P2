@@ -1,6 +1,5 @@
 package DP_P2;
 
-import javax.print.DocFlavor;
 import java.sql.*;
 import java.util.*;
 
@@ -23,7 +22,6 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
                 ov.setKlasse(rs.getInt("KLASSE"));
                 ov.setGeldigTot(rs.getDate("GELDIGTOT"));
                 ov.setSaldo(rs.getDouble("SALDO"));
-                ovChipkaarten.add((ov));
 
                 query = "SELECT * FROM REIZIGER WHERE REIZIGERID = ?";
                 PreparedStatement stmt = this.getConnection().prepareStatement(query);
@@ -33,8 +31,12 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
                     Reiziger r = new Reiziger();
                     r.setId(resultSet.getInt("REIZIGERID"));
                     r.setVoorletters(resultSet.getString("VOORLETTERS"));
-                    r.setTussenvoegsel(resultSet.getString("TUSSEN"));
-
+                    r.setTussenvoegsel(resultSet.getString("TUSSENVOEGSEL"));
+                    r.setAchternaam(resultSet.getString("ACHTERNAAM"));
+                    r.setGBdatum(resultSet.getDate("GEBORTEDATUM"));
+                    for(OVChipkaart kaart : new OVChipkaartDaoOracleDB().findByReiziger(r)){
+                        r.addOvChipkaart(kaart);
+                    }
                 }
             }
             return ovChipkaarten;
