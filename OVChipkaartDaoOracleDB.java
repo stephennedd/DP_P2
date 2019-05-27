@@ -5,11 +5,20 @@ import java.util.*;
 
 public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaartDao {
 
+    private OVChipkaart toOVChipkaart(ResultSet resultSet) throws SQLException {
+        OVChipkaart ovChipkaart = new OVChipkaart(
+                resultSet.getInt("KAARTNUMMER"),
+                resultSet.getDate("GELDIGTOT"),
+                resultSet.getInt("KLASSE"),
+                resultSet.getInt("SALDO"),
+                resultSet.getInt("REIZIGERID")
+        );
+        return ovChipkaart;
+    }
+
     @Override
     public List<OVChipkaart> findAll() {
-        Connection connection = super.getConnection();
         ArrayList<OVChipkaart> ovChipkaarten = new ArrayList<>();
-
 
         try {
             String query = "SELECT * FROM OV_CHIPKAART";
@@ -17,11 +26,7 @@ public class OVChipkaartDaoOracleDB extends OracleBaseDAO implements OVChipkaart
             ResultSet rs = statement.executeQuery(query);
 
             while (rs.next()) {
-                OVChipkaart ov = new OVChipkaart();
-                ov.setKaartNummer(rs.getInt("KAARTNUMMER"));
-                ov.setKlasse(rs.getInt("KLASSE"));
-                ov.setGeldigTot(rs.getDate("GELDIGTOT"));
-                ov.setSaldo(rs.getDouble("SALDO"));
+                ovChipkaarten.add(toOVChipkaart(rs));
 
                 query = "SELECT * FROM REIZIGER WHERE REIZIGERID = ?";
                 PreparedStatement stmt = this.getConnection().prepareStatement(query);
